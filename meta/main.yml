@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: php-fpm-pool
+    pool_name: grav
+    pool_listen: '/var/run/php7.0-fpm-grav.sock'
+    pool_user: 'www-data'
+    pool_group: 'www-data'
+

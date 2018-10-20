@@ -1,0 +1,11 @@
+email: {{ item.email }}
+fullname: '{{ item.fullname }}'
+title: {{ item.title }}
+state: {{ item.state }}
+access:
+  admin:
+    login: {{ item.access.admin.login }}
+    super: {{ item.access.admin.super }}
+  site:
+    login: {{ item.access.site.login }}
+hashed_password: {{ item.hashed_password }}

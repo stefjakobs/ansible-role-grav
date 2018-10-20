@@ -1,0 +1,13 @@
+grav_users:
+- name: stefan
+  email: stefan@localside.net
+  fullname: 'Stefan Jakobs'
+  title: Admin
+  state: enabled
+  access:
+    admin:
+      login: true
+      super: true
+    site:
+      login: true
+  hashed_password: $2y$10$1FUAZfUEt9Hlh0bOohnKKOVjQt1U0iuCBqDq4jLGTVUExqvTq0OS2
