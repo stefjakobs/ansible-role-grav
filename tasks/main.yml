@@ -10,14 +10,17 @@
 #     group: "{{ grav_group }}"
 
 - name: download tarball
-  get_url: url={{ grav_download_url }} dest=/tmp/grav.zip
+  get_url:
+    url: "{{ grav_download_url }}"
+    dest: /tmp/grav.zip
+  register: _grav_download
 #force=true
 
 - name: create web dir
   file:
     path: "{{ grav_basedir }}"
     state: directory
-    mode: 0755
+    mode: '0755'
 
 - name: extract tar ball
   unarchive:
@@ -26,12 +29,22 @@
     copy: no
     owner: "{{ grav_user }}"
     group: "{{ grav_group }}"
+  when: _grav_download.changed
+
+- name: ship multisite setup
+  copy:
+    src: "setup_{{ grav_sub_mechanism }}.php"
+    dest: "{{ grav_basedir }}/grav-admin/setup.php"
+    owner: "{{ grav_user }}"
+    group: "{{ grav_group }}"
+    mode: '0644'
 
 - name: create link to grav-admin
   file:
     state: link
     src: "{{ grav_basedir }}/grav-admin"
-    path: "{{ grav_basedir }}/blog"
+    path: "{{ grav_basedir }}/{{ item }}"
+  loop: "{{ grav_sites }}"
 
 - name: ship lighttpd config
   template:
@@ -39,12 +52,22 @@
     dest: /etc/lighttpd/conf-enabled/72-grav.conf
     mode: 0644
 
+- name: create subsites directories
+  file:
+    state: directory
+    path: "{{ grav_basedir }}/grav-admin/user/sites/{{ item }}"
+    owner: 'www-data'
+    group: 'www-data'
+    mode: '0775'
+  loop: "{{ grav_sites }}"
+
 - name: rollout users
   template:
     src: account.j2
-    dest: "{{ grav_basedir }}/blog/user/accounts/{{ item.name }}.yaml"
+    dest: "{{ grav_basedir }}/grav-admin/user/sites/{{ item.1 }}/accounts/{{ item.0.name }}.yaml"
     owner: 'www-data'
     group: 'www-data'
     mode: '0644'
-  loop: "{{ grav_users }}"
+  when: item.1 in item.0.sites or 'all' in item.0.sites
+  loop: "{{ grav_users|product(grav_sites)|list }}"
 

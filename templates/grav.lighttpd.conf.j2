@@ -5,40 +5,41 @@
 
 #PREVENTING EXPLOITS
 $HTTP["querystring"] =~ "base64_encode[^(]*\([^)]*\)" {
-    url.redirect = (".*" => "/{{ grav_path }}/index.php"       )
+    url.redirect = (".*" => "/{{ grav_default_path }}/index.php"       )
 }
 $HTTP["querystring"] =~ "(<|%3C)([^s]*s)+cript.*(>|%3E)" {
-    url.redirect = (".*" => "/{{ grav_path }}/index.php" )
+    url.redirect = (".*" => "/{{ grav_default_path }}/index.php" )
 }
 $HTTP["querystring"] =~ "GLOBALS(=|\[|\%[0-9A-Z])" {
-    url.redirect = (".*" => "/{{ grav_path }}/index.php" )
+    url.redirect = (".*" => "/{{ grav_default_path }}/index.php" )
 }
 $HTTP["querystring"] =~ "_REQUEST(=|\[|\%[0-9A-Z])" {
-    url.redirect = (".*" => "/{{ grav_path }}/index.php" )
+    url.redirect = (".*" => "/{{ grav_default_path }}/index.php" )
 }
 
 #REROUTING TO THE INDEX PAGE
 url.rewrite-if-not-file = (
-    "^/{{ grav_path }}/(.*)$" => "/{{ grav_path }}/index.php?$1"
+    "^/({{ grav_sites|join('|') }})/(.*)$" => "/$1/index.php?$2"
 )
 
 #IMPROVING SECURITY
-$HTTP["url"] =~ "^/{{ grav_path }}/(LICENSE\.txt|composer\.json|composer\.lock|nginx\.conf|web\.config)$" {
+$HTTP["url"] =~ "^/({{ grav_sites|join('|') }})/(LICENSE\.txt|composer\.json|composer\.lock|nginx\.conf|web\.config)$" {
     url.access-deny = ("")
 }
-$HTTP["url"] =~ "^/{{ grav_path }}/(\.git|cache|bin|logs|backup|tests)/(.*)" {
+$HTTP["url"] =~ "^/({{ grav_sites|join('|') }})/(\.git|cache|bin|logs|backup|tests)/(.*)" {
     url.access-deny = ("")
 }
-$HTTP["url"] =~ "^/{{ grav_path }}/(system|user|vendor)/(.*)\.(txt|md|html|yaml|yml|php|twig|sh|bat)$" {
+$HTTP["url"] =~ "^/({{ grav_sites|join('|') }})/(system|user|vendor)/(.*)\.(txt|md|html|yaml|yml|php|twig|sh|bat)$" {
     url.access-deny = ("")
 }
-$HTTP["url"] =~ "^/{{ grav_path }}/(\.(.*))" {
+$HTTP["url"] =~ "^/({{ grav_sites|join('|') }})/(\.(.*))" {
     url.access-deny = ("")
 }
 #url.access-deny = (".md","~",".inc")
 
 #PREVENT BROWSING AND SET INDEXES
-$HTTP["url"] =~ "^/{{ grav_path }}($|/)" {
+$HTTP["url"] =~ "^/({{ grav_sites|join('|') }})($|/)" {
+    server.document-root = "{{ grav_basedir }}"
     dir-listing.activate = "disable"
     index-file.names = ( "index.php", "index.html" , "index.htm" )
 }

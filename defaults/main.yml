@@ -1,5 +1,9 @@
+---
+grav_version: 1.5.10
 grav_users:
 - name: stefan
+  sites:
+    - all
   email: stefan@localside.net
   fullname: 'Stefan Jakobs'
   title: Admin
@@ -11,3 +15,19 @@ grav_users:
     site:
       login: true
   hashed_password: $2y$10$1FUAZfUEt9Hlh0bOohnKKOVjQt1U0iuCBqDq4jLGTVUExqvTq0OS2
+- name: ramona
+  sites:
+    - hochzeit
+  email: ramonadiekmann@web.de
+  fullname: 'Ramona Diekmann'
+  title: 'User'
+  state: enabled
+  access:
+    admin:
+      login: true
+      super: false
+    site:
+      login: true
+  hashed_password: $2y$10$1FUAZfUEt9Hlh0bOohnKKOVjQt1U0iuCBqDq4jLGTVUExqvTq0OS2
+
+grav_sub_mechanism: subdirectory
