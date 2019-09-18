@@ -23,7 +23,8 @@ if (!$name || !is_dir(ROOT_DIR . "user/{$folder}")) {
 }
 
 // Prefix all pages with the name of the subsite
-$container['pages']->base($prefix);
+// THIS IS NOT NECCESSARY - lighttpd will do this already
+//$container['pages']->base($prefix);
 
 return [
     'environment' => $name,

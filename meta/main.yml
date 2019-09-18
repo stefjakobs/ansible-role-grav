@@ -15,8 +15,9 @@ galaxy_info:
         - stretch
 dependencies:
   - role: php-fpm-pool
+    php_fpm_version: 7.3
     pool_name: grav
-    pool_listen: '/var/run/php/php7.0-fpm-grav.sock'
+    pool_listen: '/var/run/php/php7.3-fpm-grav.sock'
     pool_user: 'www-data'
     pool_group: 'www-data'
 
