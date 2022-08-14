@@ -3,21 +3,20 @@ galaxy_info:
   author: stefjakobs
   description: Install and configure grav
   license: GPLv3
-  min_ansible_version: 2.7
+  min_ansible_version: 2.9.0
   galaxy_tags:
-    - mail
-    - kopano
-    - groupware
+    - cms
+    - grav
   platforms:
     - name: Debian
       versions:
         - jessie
         - stretch
+        - bullseye
 dependencies:
   - role: php-fpm-pool
-    php_fpm_version: 7.3
+    php_fpm_version: "{{ grav_php_version }}"
     pool_name: grav
-    pool_listen: '/var/run/php/php7.3-fpm-grav.sock'
+    pool_listen: '/var/run/php/php{{ grav_php_version }}-fpm-grav.sock'
     pool_user: 'www-data'
     pool_group: 'www-data'
-

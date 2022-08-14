@@ -1,38 +1,39 @@
 ---
-#- name: create grav group
-#  group: name="{{ grav_group }}"
+# - name: create grav group
+#   ansible.builtin.group: name="{{ grav_group }}"
 
-#- name: create grav user
-#  user:
+# - name: create grav user
+#   ansible.builtin.user:
 #     name: "{{ grav_user }}"
 #     comment: "grav cms user"
 #     home: "{{ grav_basedir }}"
 #     group: "{{ grav_group }}"
 
 - name: download tarball
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ grav_download_url }}"
     dest: /tmp/grav.zip
+    mode: '0644'
+    # force: true
   register: _grav_download
-#force=true
 
 - name: create web dir
-  file:
+  ansible.builtin.file:
     path: "{{ grav_basedir }}"
     state: directory
     mode: '0755'
 
-- name: extract tar ball
-  unarchive:
+- name: extract tar ball    # noqa no-handler
+  ansible.builtin.unarchive:
     src: /tmp/grav.zip
     dest: "{{ grav_basedir }}"
-    copy: no
+    copy: false
     owner: "{{ grav_user }}"
     group: "{{ grav_group }}"
   when: _grav_download.changed
 
 - name: ship multisite setup
-  copy:
+  ansible.builtin.copy:
     src: "setup_{{ grav_sub_mechanism }}.php"
     dest: "{{ grav_basedir }}/grav-admin/setup.php"
     owner: "{{ grav_user }}"
@@ -40,20 +41,20 @@
     mode: '0644'
 
 - name: create link to grav-admin
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ grav_basedir }}/grav-admin"
     path: "{{ grav_basedir }}/{{ item }}"
   loop: "{{ grav_sites }}"
 
 - name: ship lighttpd config
-  template:
+  ansible.builtin.template:
     src: grav.lighttpd.conf.j2
     dest: /etc/lighttpd/conf-enabled/72-grav.conf
     mode: 0644
 
 - name: create subsites directories
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ grav_basedir }}/grav-admin/user/sites/{{ item }}"
     owner: 'www-data'
@@ -62,12 +63,11 @@
   loop: "{{ grav_sites }}"
 
 - name: rollout users
-  template:
+  ansible.builtin.template:
     src: account.j2
     dest: "{{ grav_basedir }}/grav-admin/user/sites/{{ item.1 }}/accounts/{{ item.0.name }}.yaml"
     owner: 'www-data'
     group: 'www-data'
     mode: '0644'
   when: item.1 in item.0.sites or 'all' in item.0.sites
-  loop: "{{ grav_users|product(grav_sites)|list }}"
-
+  loop: "{{ grav_users | product(grav_sites) | list }}"

@@ -1,33 +1,23 @@
 ---
-grav_version: 1.6.5
+grav_version: 1.7.35
+grav_php_version: 8.0
 grav_users:
-- name: stefan
-  sites:
-    - all
-  email: stefan@localside.net
-  fullname: 'Stefan Jakobs'
-  title: Admin
-  state: enabled
-  access:
-    admin:
-      login: true
-      super: true
-    site:
-      login: true
-  hashed_password: $2y$10$1FUAZfUEt9Hlh0bOohnKKOVjQt1U0iuCBqDq4jLGTVUExqvTq0OS2
-- name: ramona
-  sites:
-    - hochzeit
-  email: ramonadiekmann@web.de
-  fullname: 'Ramona Diekmann'
-  title: 'User'
-  state: enabled
-  access:
-    admin:
-      login: true
-      super: false
-    site:
-      login: true
-  hashed_password: $2y$10$1FUAZfUEt9Hlh0bOohnKKOVjQt1U0iuCBqDq4jLGTVUExqvTq0OS2
+  - name: jdoe
+    sites:
+      - all
+    email: jdoe@example.com
+    fullname: 'John Doe'
+    title: Admin
+    state: enabled
+    access:
+      admin:
+        login: true
+        super: true
+      site:
+        login: true
+    hashed_password: ...
 
 grav_sub_mechanism: subdirectory
+grav_default_path: blog
+grav_sites:
+  - blog

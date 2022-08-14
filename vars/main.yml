@@ -3,7 +3,3 @@ grav_download_url: https://github.com/getgrav/grav/releases/download/{{ grav_ver
 grav_basedir: /var/www/grav
 grav_user: www-data
 grav_group: www-data
-grav_default_path: blog
-grav_sites:
-  - blog
-  - hochzeit
